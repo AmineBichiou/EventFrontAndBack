@@ -1,0 +1,49 @@
+<div class="container py-4">
+  <h2 class="mb-3">Liste des événements</h2>
+
+  <!-- Recherche -->
+  <input
+    type="text"
+    class="form-control mb-4"
+    placeholder="Rechercher un événement"
+    [(ngModel)]="searchItem"
+    
+  />
+
+  <div class="row g-3">
+    <div class="col-md-4" *ngFor="let event of filter()">
+      <div class="card h-100 shadow-sm">
+        <img
+          src="{{ event.imageUrl }}"
+          class="card-img-top img-fluid"
+          style="height: 200px; object-fit: cover;"
+        />
+
+        <div class="card-body">
+          <h5 class="card-title">{{ event.titre | uppercase }}</h5>
+          <p class="text-muted">{{ event.date | date }}</p>
+          <p>{{ event.description }}</p>
+          <p class="fw-bold">{{ event.prix }} €</p>
+          <p>{{ event.nbplaces }} places disponibles</p>
+
+          <!-- Boutons -->
+          <button
+            class="btn btn-sm btn-primary"
+            (click)="likeEvent(event)"
+            [hidden]="IsExpired(event)"
+          >
+            👍 Like
+          </button>
+          <button
+            class="btn btn-sm btn-primary"
+            (click)="TicketEvent(event)"
+            [disabled]="event.nbplaces == 0"
+          >
+            🎟️ Buy Ticket
+          </button>
+          <span class="ms-2">{{ event.nbrlikes }} likes</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,120 @@
+<div class="container">
+  <h2>Ajouter un Événement</h2>
+
+  <form [formGroup]="eventForm" (ngSubmit)="onSubmit()" novalidate>
+    <!-- Titre -->
+    <div class="form-group">
+      <label for="titre">Titre</label>
+      <input id="titre" type="text" class="form-control" formControlName="titre" placeholder="Titre de l'événement" />
+      <!-- <div class="error" *ngIf="f['titre'].touched && f['titre'].invalid"> -->
+        <!-- <small *ngIf="f['titre'].errors?.['required']">Le titre est obligatoire.</small> -->
+        <!-- <small *ngIf="f['titre'].errors?.['minlength']">Minimum 5 caractères.</small>
+        <small *ngIf="f['titre'].errors?.['pattern']">Seulement des lettres et espaces.</small> -->
+
+
+        <!-- profa methode -->
+         <div class="error" *ngIf="titre!.touched && titre!.invalid">
+        <small *ngIf="eventForm.get('titre')?.hasError('required')" style="color: red;">test </small> 
+        </div>
+        <small *ngIf="eventForm.get('titre')?.hasError('pattern')">test pattern </small> 
+        <small *ngIf="eventForm.get('titre')?.hasError('minlength')">test min 5 caractères.</small>
+
+        <!-- profa methode -->
+      <!-- </div> -->
+    </div>
+
+    <!-- Description -->
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" rows="4" class="form-control" formControlName="description" placeholder="Description de l'événement"></textarea>
+      <div class="error" *ngIf="f['description'].touched && f['description'].invalid">
+        <small *ngIf="f['description'].errors?.['required']">La description est obligatoire.</small>
+        <small *ngIf="f['description'].errors?.['minlength']">Minimum 30 caractères.</small>
+      </div>
+    </div>
+
+    <!-- Date -->
+<!-- Date -->
+<div class="form-group">
+  <label for="date">Date</label>
+  <input id="date" type="date" class="form-control" formControlName="date" />
+  
+  <div class="error" *ngIf="f['date'].touched && f['date'].invalid">
+    <small *ngIf="f['date'].errors?.['required']">La date est obligatoire.</small>
+    <small *ngIf="f['date'].errors?.['futureDateInvalid']">
+      {{ f['date'].errors?.['futureDateInvalid'] }}
+    </small>
+  </div>
+</div>
+
+
+
+    <!-- Lieu -->
+    <div class="form-group">
+      <label for="lieu">Lieu</label>
+      <input id="lieu" type="text" class="form-control" formControlName="lieu" placeholder="Lieu de l'événement" />
+      <div class="error" *ngIf="f['lieu'].touched && f['lieu'].invalid">
+        <small>Le lieu est obligatoire.</small>
+      </div>
+    </div>
+
+    <!-- Prix -->
+    <div class="form-group">
+      <label for="prix">Prix</label>
+      <input id="prix" type="text" class="form-control" formControlName="prix" placeholder="Ex: 25.50" />
+      <div class="error" *ngIf="f['prix'].touched && f['prix'].invalid">
+        <small *ngIf="f['prix'].errors?.['required']">Le prix est obligatoire.</small>
+        <small *ngIf="f['prix'].errors?.['pattern']">Format invalide (ex: 10 ou 10.50).</small>
+      </div>
+    </div>
+
+    <!-- Nombre de places -->
+    <div class="form-group">
+      <label for="nbplaces">Nombre de places</label>
+      <input id="nbplaces" type="number" class="form-control" formControlName="nbplaces" placeholder="Max 100" />
+      <div class="error" *ngIf="f['nbplaces'].touched && f['nbplaces'].invalid">
+        <small *ngIf="f['nbplaces'].errors?.['required']">Ce champ est obligatoire.</small>
+        <small *ngIf="f['nbplaces'].errors?.['pattern']">Le nombre doit être ≤ 100.</small>
+      </div>
+    </div>
+
+    <!-- Organisateur -->
+    <div class="form-group">
+      <label for="organisateurId">ID Organisateur</label>
+      <input id="organisateurId" type="number" class="form-control" formControlName="organisateurId" placeholder="ID organisateur" />
+      <div class="error" *ngIf="f['organisateurId'].touched && f['organisateurId'].invalid">
+        <small>Ce champ est obligatoire.</small>
+      </div>
+    </div>
+
+    <!-- Image -->
+    <div class="form-group">
+      <label for="imageUrl">Image (optionnelle)</label>
+      <input id="imageUrl" type="text" class="form-control" formControlName="imageUrl" placeholder="URL de l'image" />
+    </div>
+<!-- Domains -->
+<div class="form-group">
+  <label>Domains</label>
+  <div formArrayName="domains">
+    <div *ngFor="let domain of domains.controls; let i = index" class="mb-2 d-flex align-items-center">
+      <input type="text" class="form-control me-2" [formControlName]="i" placeholder="Nom du domaine" />
+      <button type="button" class="btn btn-danger btn-sm" (click)="removeDomain(i)">Supprimer</button>
+      
+      <!-- Validation messages -->
+      <small *ngIf="domain.touched && domain.invalid" class="text-danger">
+        <span *ngIf="domain.errors?.['required']">Le domaine est obligatoire.</span>
+        <span *ngIf="domain.errors?.['minlength']">Minimum 3 caractères.</span>
+      </small>
+    </div>
+  </div>
+
+  <button type="button" class="btn btn-secondary btn-sm mt-2" (click)="addDomain()">Ajouter un domaine</button>
+</div>
+
+
+    <!-- Bouton -->
+    <button type="submit" class="btn btn-primary">
+      Ajouter
+    </button>
+  </form>
+</div>

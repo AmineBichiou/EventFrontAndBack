@@ -1,0 +1,222 @@
+<div class="container mt-4">
+  <div class="card shadow">
+    <div class="card-header bg-primary text-white">
+      <h3><i class="bi bi-calendar-check"></i> Formulaire de Participation</h3>
+      <p class="mb-0">Événement ID: {{ eventId }} | Prix: {{ eventPrice }} DT</p>
+    </div>
+    <div class="card-body">
+      <form #participationForm="ngForm" (ngSubmit)="onSubmit(participationForm)">
+        
+        <!-- Event ID (lecture seule, depuis params) -->
+        <div class="form-group mb-3">
+          <label for="eventId" class="form-label">
+            ID de l'Événement
+          </label>
+          <input 
+            type="number" 
+            class="form-control" 
+            id="eventId"
+            [value]="eventId"
+            readonly
+            disabled>
+        </div>
+
+        <!-- User ID -->
+        <div class="form-group mb-3">
+          <label for="userId" class="form-label">
+            ID Utilisateur <span class="text-danger">*</span>
+          </label>
+          <input 
+            type="number" 
+            class="form-control" 
+            id="userId"
+            name="userId"
+            [(ngModel)]="participation.userId"
+            required
+            #userId="ngModel"
+            [class.is-invalid]="userId.invalid && userId.touched"
+            [class.is-valid]="userId.valid && userId.touched">
+          
+          <div *ngIf="userId.invalid && userId.touched">
+            <small class="text-danger" *ngIf="userId.errors?.['required']">
+              <i class="bi bi-exclamation-circle"></i> L'ID utilisateur est obligatoire
+            </small>
+          </div>
+        </div>
+
+        <!-- Email Participant -->
+        <div class="form-group mb-3">
+          <label for="email" class="form-label">
+            Email du Participant <span class="text-danger">*</span>
+          </label>
+          <input 
+            type="email" 
+            class="form-control" 
+            id="email"
+            name="emailParticipant"
+            [(ngModel)]="participation.emailParticipant"
+            required
+            email
+            #email="ngModel"
+            placeholder="exemple@email.com"
+            [class.is-invalid]="email.invalid && email.touched"
+            [class.is-valid]="email.valid && email.touched">
+          
+          <div *ngIf="email.invalid && email.touched">
+            <small class="text-danger" *ngIf="email.errors?.['required']">
+              <i class="bi bi-exclamation-circle"></i> L'email est obligatoire
+            </small>
+            <small class="text-danger" *ngIf="email.errors?.['email']">
+              <i class="bi bi-exclamation-circle"></i> Le format de l'email est invalide
+            </small>
+          </div>
+          <div *ngIf="email.valid && email.touched">
+            <small class="text-success">
+              <i class="bi bi-check-circle"></i> Email valide
+            </small>
+          </div>
+        </div>
+
+        <!-- Nombre de Places -->
+        <div class="form-group mb-3">
+          <label for="nbPlaces" class="form-label">
+            Nombre de Places <span class="text-danger">*</span>
+          </label>
+          <input 
+            type="number" 
+            class="form-control" 
+            id="nbPlaces"
+            name="nbPlaces"
+            [(ngModel)]="participation.nbPlaces"
+            required
+            min="1"
+            #nbPlaces="ngModel"
+            (blur)="onNbPlacesBlur()"
+            [class.is-invalid]="nbPlaces.invalid && nbPlaces.touched"
+            [class.is-valid]="nbPlaces.valid && nbPlaces.touched">
+          
+          <div *ngIf="nbPlaces.invalid && nbPlaces.touched">
+            <small class="text-danger" *ngIf="nbPlaces.errors?.['required']">
+              <i class="bi bi-exclamation-circle"></i> Le nombre de places est obligatoire
+            </small>
+            <small class="text-danger" *ngIf="nbPlaces.errors?.['min']">
+              <i class="bi bi-exclamation-circle"></i> Le nombre de places doit être supérieur strictement à 0
+            </small>
+          </div>
+          <div *ngIf="nbPlaces.valid && nbPlaces.touched">
+            <small class="text-success">
+              <i class="bi bi-check-circle"></i> Nombre de places valide
+            </small>
+          </div>
+        </div>
+
+        <!-- Status -->
+        <div class="form-group mb-3">
+          <label for="status" class="form-label">
+            Statut <span class="text-danger">*</span>
+          </label>
+          <select 
+            class="form-control" 
+            id="status"
+            name="status"
+            [(ngModel)]="participation.status"
+            required
+            #status="ngModel"
+            [class.is-invalid]="status.invalid && status.touched"
+            [class.is-valid]="status.valid && status.touched">
+            <option value="" disabled>-- Sélectionner un statut --</option>
+            <option value="pending">En attente</option>
+            <option value="confirmed">Confirmé</option>
+            <option value="cancelled">Annulé</option>
+          </select>
+          
+          <div *ngIf="status.invalid && status.touched">
+            <small class="text-danger" *ngIf="status.errors?.['required']">
+              <i class="bi bi-exclamation-circle"></i> Le statut est obligatoire
+            </small>
+          </div>
+        </div>
+
+        <!-- Prix Total (utilise eventPrice des params) -->
+        <div *ngIf="showTotalPrice && nbPlaces.valid" class="alert alert-info mt-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <strong><i class="bi bi-calculator"></i> Prix par place:</strong> 
+              <span class="badge bg-primary ms-2">{{ eventPrice }} DT</span>
+            </div>
+            <div>
+              <strong><i class="bi bi-cash-stack"></i> Total à payer:</strong> 
+              <span class="badge bg-success ms-2 fs-6">{{ calculateTotal() }} DT</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert alert-warning mt-3">
+          <small>
+            <i class="bi bi-info-circle"></i> 
+            <strong>Note:</strong> Tous les champs marqués d'un astérisque (<span class="text-danger">*</span>) sont obligatoires.
+          </small>
+        </div>
+
+        <!-- Buttons -->
+        <div class="d-flex gap-2 mt-4">
+          <button 
+            type="submit" 
+            class="btn btn-primary btn-lg"
+            [disabled]="participationForm.invalid">
+            <i class="bi bi-check-circle"></i>
+            {{ participationForm.invalid ? 'Veuillez remplir tous les champs' : 'Soumettre la Participation' }}
+          </button>
+          <button 
+            type="button" 
+            class="btn btn-secondary btn-lg"
+            (click)="cancel()">
+            <i class="bi bi-x-circle"></i> Annuler
+          </button>
+        </div>
+      </form>
+
+      <!-- Liste des participations -->
+      <div *ngIf="participations.length > 0" class="mt-5">
+        <h4 class="mb-3">
+          <i class="bi bi-list-check"></i> Participations Enregistrées
+        </h4>
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead class="table-dark">
+              <tr>
+                <th>ID</th>
+                <th>Event ID</th>
+                <th>User ID</th>
+                <th>Email</th>
+                <th>Nb Places</th>
+                <th>Statut</th>
+                <th>Date</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of participations">
+                <td>{{ p.id }}</td>
+                <td>{{ p.eventId }}</td>
+                <td>{{ p.userId }}</td>
+                <td>{{ p.emailParticipant }}</td>
+                <td>{{ p.nbPlaces }}</td>
+                <td>
+                  <span class="badge" 
+                        [class.bg-warning]="p.status === 'pending'"
+                        [class.bg-success]="p.status === 'confirmed'"
+                        [class.bg-danger]="p.status === 'cancelled'">
+                    {{ p.status }}
+                  </span>
+                </td>
+                <td>{{ p.registrationDate | date:'short' }}</td>
+                <td>{{ p.nbPlaces * eventPrice }} DT</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
