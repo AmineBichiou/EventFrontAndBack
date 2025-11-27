@@ -29,7 +29,6 @@ export class ParticipationFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Récupérer les paramètres depuis l'URL
 this.route.snapshot.paramMap.get('id');
     this.eventId = Number(this.route.snapshot.paramMap.get('id'));
     this.eventPrice = Number(this.route.snapshot.paramMap.get('prix'));
@@ -39,7 +38,7 @@ this.route.snapshot.paramMap.get('id');
     if (form.valid) {
       const newParticipation = new Participation(
         this.participation.userId,
-        this.eventId,  // Utiliser eventId des params
+        this.eventId,
         this.participation.emailParticipant,
         this.participation.nbPlaces,
         this.participation.status
@@ -57,7 +56,7 @@ this.route.snapshot.paramMap.get('id');
   }
 
   calculateTotal(): number {
-    return this.participation.nbPlaces * this.eventPrice;  // Utiliser eventPrice des params
+    return this.participation.nbPlaces * this.eventPrice;
   }
 
   onNbPlacesBlur(): void {
