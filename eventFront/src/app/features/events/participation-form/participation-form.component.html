@@ -193,6 +193,7 @@
                 <th>Statut</th>
                 <th>Date</th>
                 <th>Total</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -212,6 +213,11 @@
                 </td>
                 <td>{{ p.registrationDate | date:'short' }}</td>
                 <td>{{ p.nbPlaces * eventPrice }} DT</td>
+                <td>
+                <button class="btn btn-danger btn-sm" (click)="deleteParticipation(p.id)">
+                  delete
+                </button>
+              </td>
               </tr>
             </tbody>
           </table>

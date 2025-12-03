@@ -7,7 +7,7 @@ import { NotfoundComponent } from './notfound/notfound.component';
 const routes: Routes = [
   {path:'home', component:HomeComponent},
   {path:'events', component:ListEventComponent},
-  {path:'', redirectTo:'events', pathMatch:'full'},
+  {path:'', redirectTo:'events/list', pathMatch:'full'},
   //   children:[
   // {path:'test',component:HomeComponent}
   { path: 'tickets', loadChildren: () => import('./features/tickets/tickets.module').then(m => m.TicketsModule) },
