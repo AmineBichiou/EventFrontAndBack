@@ -9,4 +9,6 @@ export interface Event {
     imageUrl: string;
     nbplaces: number;
     nbrlikes:number;
+
+    
 }

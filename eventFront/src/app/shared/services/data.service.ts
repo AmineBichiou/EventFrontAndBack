@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 export interface AppEvent {
-  domains: never[];
+  domains?: string[];
   id: number;
   titre: string;
   description: string;
